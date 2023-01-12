@@ -1,0 +1,23 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v6.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v6.0": {
+      "PokeDex.Common/1.0.0": {
+        "runtime": {
+          "PokeDex.Common.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "PokeDex.Common/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

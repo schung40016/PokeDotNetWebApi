@@ -40,19 +40,19 @@ namespace PokeDexWebApi.Services
             return tempPokemon;
         }
 
-        public async Task<Pokemon> FetchPokemonObjWithID(string input)
+        public async Task<List<PokemonDTO>> FetchConvDTO(List<Pokemon> list)
         {
-            ApiPokemon apiPokemon = await serviceAgent.GetPokemonByInput(input);
-
-            Pokemon tempPokemon = new Pokemon
+            List<PokemonDTO> tempList = list.Select(x => new PokemonDTO
             {
-                DexNumber = apiPokemon.id,
-                Name = apiPokemon.name,
-                PokemonTypeId = apiPokemon.id,
-                AbilityId = apiPokemon.id
-            };
+                Id = x.Id,
+                DexNumber = x.DexNumber,
+                Name = x.Name,
+                PokemonTypeId = x.PokemonTypeId,
+                Description = x.Description,
+                AbilityId = x.AbilityId
+            }).ToList();
 
-            return tempPokemon;
+            return tempList;
         }
     }
 }

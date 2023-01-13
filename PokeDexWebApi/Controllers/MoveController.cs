@@ -11,6 +11,7 @@ using PokeDex.Data.Models;
 using PokeDex.Common.PokeApiModels;
 using PokeDexWebApi.Services;
 using static System.Net.WebRequestMethods;
+using PokeDexWebApi.Services.ServiceInterface;
 
 namespace PokeDexWebApi.Controllers
 {
@@ -29,9 +30,11 @@ namespace PokeDexWebApi.Controllers
 
         // GET: api/Moves
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Move>>> GetMoves()
+        public async Task<ActionResult<IEnumerable<MoveDTO>>> GetMoves()   // ALl methods shoulkd return DTO (frontend), service layer also returns DTO
         {
-            return await _context.Moves.ToListAsync();
+            var list = await _context.Moves.ToListAsync();
+
+            return await moveService.FetchConvDTO(list);
         }
 
         // GET: api/Moves/5

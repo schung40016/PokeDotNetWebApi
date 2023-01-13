@@ -5,6 +5,7 @@ using PokeDex.Common.PokeApiModels;
 using PokeDex.Data.Repositories;
 using PokeDex.Data.Models;
 using PokeDexWebApi.Services.ServiceInterface;
+using System.Collections.Generic;
 
 namespace PokeDexWebApi.Services
 {
@@ -17,6 +18,13 @@ namespace PokeDexWebApi.Services
         public PokemonMoveService(PokedexDbContext context)
         {
             pokemonMoveRepository = new PokemonMoveRepository(context);
+        }
+
+        public async Task<PokemonMoveDTO> GetPokemonMove(List<PokemonMove> list, int id)
+        {
+            List<PokemonMoveDTO> pokeMoveDTOList = await FetchConvDTO(list);
+
+            return pokeMoveDTOList.Find(x => x.Id == id);
         }
 
         public async Task AddPokemonMove(int pokemonId, int moveId)
@@ -40,6 +48,18 @@ namespace PokeDexWebApi.Services
             };
 
             return tempPokemonMove;
+        }
+
+        public async Task<List<PokemonMoveDTO>> FetchConvDTO(List<PokemonMove> list)
+        {
+            List<PokemonMoveDTO> tempList = list.Select(x => new PokemonMoveDTO
+            {
+                Id = x.Id,
+                PokemonId = x.PokemonId,
+                MoveId = x.MoveId
+            }).ToList();
+
+            return tempList;
         }
     }
 }

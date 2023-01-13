@@ -3,6 +3,7 @@ using PokeDexWebApi.Controllers;
 using PokeDex.Common.DTOs;
 using PokeDex.Common.PokeApiModels;
 using PokeDexWebApi.Services.ServiceInterface;
+using PokeDex.Data.Models;
 
 namespace PokeDexWebApi.Services
 {
@@ -34,6 +35,20 @@ namespace PokeDexWebApi.Services
             };
 
             return tempPokemonType;
+        }
+
+        public async Task<List<PokemonTypeDTO>> FetchConvDTO(List<PokemonType> list)
+        {
+            List<PokemonTypeDTO> tempList = list.Select(x => new PokemonTypeDTO
+            {
+                Id = x.Id,
+                Name = x.Name,
+                Strengths = x.Strengths,
+                Weaknesses = x.Weaknesses,
+                NoEffects = x.NoEffects
+            }).ToList();
+
+            return tempList;
         }
 
         public string StrengthsToString(List<ApiTypesDamageRelationsHalfDamageFrom> param_types)

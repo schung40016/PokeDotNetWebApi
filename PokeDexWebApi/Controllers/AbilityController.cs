@@ -11,6 +11,7 @@ using PokeDex.Data.Models;
 using PokeDex.Common.PokeApiModels;
 using PokeDexWebApi.Services;
 using static System.Net.WebRequestMethods;
+using PokeDexWebApi.Services.ServiceInterface;
 
 namespace PokeDexWebApi.Controllers
 {
@@ -19,7 +20,6 @@ namespace PokeDexWebApi.Controllers
     public class AbilityController : ControllerBase
     {
         private readonly PokedexDbContext _context;
-        private PokeServiceAgent serviceAgent = new PokeServiceAgent();
         private AbilityService abilityService = new AbilityService();
 
         public AbilityController(PokedexDbContext context)
@@ -29,23 +29,25 @@ namespace PokeDexWebApi.Controllers
 
         // GET: api/Abilities
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Ability>>> GetAbilities()
+        public async Task<ActionResult<IEnumerable<AbilityDTO>>> GetAbilities()
         {
-            return await _context.Abilities.ToListAsync();
+            var list = await _context.Abilities.ToListAsync();
+
+            return await abilityService.FetchConvDTO(list);
         }
 
         // GET: api/Abilities/drought
         [HttpGet("{id:int}")]
         public async Task<ActionResult<AbilityDTO>> GetAbility(int id)
         {
-            return await abilityService.GetAbilityDTO(id);
+            return await abilityService.GetAbility(id);  // rename 
         }
 
         // GET: api/Abilities/70
         [HttpGet("{name:alpha}")]
         public async Task<ActionResult<AbilityDTO>> GetAbility(string name)
         {
-            return await abilityService.GetAbilityDTO(name);
+            return await abilityService.GetAbility(name);
         }
 
 /*        [HttpGet()]

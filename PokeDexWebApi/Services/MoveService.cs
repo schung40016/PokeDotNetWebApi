@@ -39,20 +39,19 @@ namespace PokeDexWebApi.Services
             return tempMove;
         }
 
-        public async Task<Move> FetchMoveObjWithID(string input)
+        public async Task<List<MoveDTO>> FetchConvDTO(List<Move> list)
         {
-            ApiMove apiMove = await serviceAgent.GetMoveByInput(input);
-
-            Move tempMove = new Move
+            List<MoveDTO> tempList = list.Select(x => new MoveDTO
             {
-                Id = apiMove.id,
-                Name = apiMove.name,
-                Description = apiMove.flavor_text_entries[1].flavor_text,
-                Damage = apiMove.power,
-                Pp = apiMove.pp,
-            };
+                Id = x.Id,
+                Name = x.Name,
+                TypeId = x.TypeId,
+                Description = x.Description,
+                Damage= x.Damage,
+                Pp = x.Pp
+            }).ToList();
 
-            return tempMove;
+            return tempList;
         }
     }
 }

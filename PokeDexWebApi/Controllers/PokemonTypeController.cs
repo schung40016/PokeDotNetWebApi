@@ -11,6 +11,7 @@ using PokeDex.Data.Models;
 using PokeDex.Common.PokeApiModels;
 using PokeDexWebApi.Services;
 using static System.Net.WebRequestMethods;
+using PokeDexWebApi.Services.ServiceInterface;
 
 namespace PokeDexWebApi.Controllers
 {
@@ -29,9 +30,11 @@ namespace PokeDexWebApi.Controllers
 
         // GET: api/PokemonTypes
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<PokemonType>>> GetPokemonTypes()
+        public async Task<ActionResult<IEnumerable<PokemonTypeDTO>>> GetPokemonTypes()
         {
-            return await _context.PokemonTypes.ToListAsync();
+            var list = await _context.PokemonTypes.ToListAsync();
+
+            return await pokemonTypeService.FetchConvDTO(list);
         }
 
         // GET: api/PokemonTypes/5

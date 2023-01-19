@@ -12,6 +12,7 @@ using PokeDex.Common.PokeApiModels;
 using PokeDexWebApi.Services;
 using static System.Net.WebRequestMethods;
 using PokeDexWebApi.Services.ServiceInterface;
+using PokeDex.Data.Repositories;
 
 namespace PokeDexWebApi.Controllers
 {
@@ -20,12 +21,12 @@ namespace PokeDexWebApi.Controllers
     public class MoveController : ControllerBase
     {
         private readonly PokedexDbContext _context;
-        private PokeServiceAgent serviceAgent = new PokeServiceAgent();
-        MoveService moveService = new MoveService();
+        MoveService moveService;
 
         public MoveController(PokedexDbContext context)
         {
             _context = context;
+            moveService = new MoveService(context);
         }
 
         // GET: api/Moves
@@ -45,7 +46,7 @@ namespace PokeDexWebApi.Controllers
         }
 
         // GET: api/Moves/pound
-        [HttpGet("{name:alpha}")]
+        [HttpGet("{name}")]
         public async Task<ActionResult<MoveDTO>> GetMove(string name)
         {
             return await moveService.GetMove(name);

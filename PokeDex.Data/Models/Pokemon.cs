@@ -17,6 +17,8 @@ public partial class Pokemon
 
     public int Id { get; set; }
 
+    public string? Region { get; set; }
+
     public virtual Ability Ability { get; set; } = null!;
 
     public virtual ICollection<PokemonMove> PokemonMoves { get; } = new List<PokemonMove>();

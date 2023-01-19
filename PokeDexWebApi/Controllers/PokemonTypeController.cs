@@ -45,7 +45,7 @@ namespace PokeDexWebApi.Controllers
         }
 
         // GET: api/PokemonTypes/normal
-        [HttpGet("{name:alpha}")]
+        [HttpGet("{name}")]
         public async Task<ActionResult<PokemonTypeDTO>> GetPokemonType(string name)
         {
             return await pokemonTypeService.GetPokemonType(name);

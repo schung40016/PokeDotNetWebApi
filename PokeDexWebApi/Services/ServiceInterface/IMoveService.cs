@@ -6,11 +6,11 @@ namespace PokeDexWebApi.Services.ServiceInterface
 {
     public interface IMoveService
     {
-        public Task<ActionResult<MoveDTO>> GetMove(int id);
+        public Task<MoveDTO> GetMove(int id);
 
-        public Task<ActionResult<MoveDTO>> GetMove(string name);
+        public Task<MoveDTO> GetMove(string name);
 
-        public Task<ActionResult<MoveDTO>> GetMoveFromStringOrInt(string input);
+        public Task<MoveDTO> GetMoveFromStringOrInt(string input, Move model);
 
         public Task<List<MoveDTO>> FetchConvDTO(List<Move> list);
     }

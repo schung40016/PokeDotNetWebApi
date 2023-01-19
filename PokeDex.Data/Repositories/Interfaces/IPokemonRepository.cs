@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PokeDex.Data.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,5 +9,8 @@ namespace PokeDex.Data.Repositories
 {
     public interface IPokemonRepository
     {
+        public Task<Pokemon> FetchPokemonById(int id);
+
+        public Task<Pokemon> FetchPokemonByName(string name);
     }
 }

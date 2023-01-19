@@ -59,11 +59,8 @@ public partial class PokedexDbContext : DbContext
 
             entity.ToTable("Pokemon");
 
-            entity.Property(e => e.Id).ValueGeneratedNever();
-            entity.Property(e => e.DexNumber).ValueGeneratedOnAdd();
-            entity.Property(e => e.Name)
-                .HasMaxLength(50)
-                .IsFixedLength();
+            entity.Property(e => e.Name).HasMaxLength(50);
+            entity.Property(e => e.Region).HasMaxLength(50);
 
             entity.HasOne(d => d.Ability).WithMany(p => p.Pokemons)
                 .HasForeignKey(d => d.AbilityId)

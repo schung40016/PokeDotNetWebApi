@@ -15,7 +15,7 @@
         public List<ApiMoveFlavorTextEntries> flavor_text_entries { get; set; }
 
         // Damage
-        public int power { get; set; }
+        public int? power { get; set; }
 
         // PP
         public int pp { get; set; }

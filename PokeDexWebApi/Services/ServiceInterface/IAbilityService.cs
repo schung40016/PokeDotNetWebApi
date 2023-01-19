@@ -10,7 +10,7 @@ namespace PokeDexWebApi.Services.ServiceInterface
 
         public Task<ActionResult<AbilityDTO>> GetAbility(string name);
 
-        public Task<ActionResult<AbilityDTO>> GetAbilityFromStringOrInt(string input);
+        public Task<ActionResult<AbilityDTO>> GetAbilityFromStringOrInt(string input, Ability model);
 
         public Task<List<AbilityDTO>> FetchConvDTO(List<Ability> list);
     }

@@ -4,37 +4,59 @@ using PokeDex.Common.DTOs;
 using PokeDex.Data.Models;
 using PokeDex.Common.PokeApiModels;
 using PokeDexWebApi.Services.ServiceInterface;
+using PokeDex.Data.Repositories;
 
 namespace PokeDexWebApi.Services
 {
     // Notes:
-    // TO-DO: combine data from API and Ability table. Make something up for the ability table SQL server. 
+    // TO-DO: 
+    // Rename, take out fromdblist.
+    // Clean the "null" green squiggly lines problems.
     // Containerize (future feature).
+
+    // Plans:
+    // Caching.
+    // Build a simulater @.@.
+    // AI Randomizer. 
+    // Data pipeline.
 
     public class AbilityService : IAbilityService
     {
         private PokeServiceAgent serviceAgent = new PokeServiceAgent();
-    
+        private AbilityRepository abilityRepository;
+
+        public AbilityService(PokedexDbContext context)
+        {
+            abilityRepository = new AbilityRepository(context);
+        }
+
         public async Task<ActionResult<AbilityDTO>> GetAbility(int id)
         {
-            return await this.GetAbilityFromStringOrInt(id.ToString());
+            var ability = await abilityRepository.FetchAbilityById(id);
+
+            return await this.GetAbilityFromStringOrInt(id.ToString(), ability);
         }
 
         public async Task<ActionResult<AbilityDTO>> GetAbility(string name)
         {
-            return await this.GetAbilityFromStringOrInt(name);
+            var ability = await abilityRepository.FetchAbilityByName(name);
+
+            return await this.GetAbilityFromStringOrInt(name, ability);
         }
 
-        public async Task<ActionResult<AbilityDTO>> GetAbilityFromStringOrInt(string input)
+        public async Task<ActionResult<AbilityDTO>> GetAbilityFromStringOrInt(string input, Ability model)
         {
             ApiAbility deserializedObject = await serviceAgent.GetAbilityByInput(input);
 
+            bool isNull = model == null ? true : false;
+
             AbilityDTO tempAbility = new AbilityDTO
             {
-                Id = deserializedObject.id,
+                Id = !isNull ? model.Id : -1,
                 Name = deserializedObject.name,
-                Description = deserializedObject.effect_entries[1].short_effect
-                // Part of TO-DO: Add move cycle or damage.
+                Description = deserializedObject.effect_entries[1].short_effect,
+                MoveCycle = !isNull ? model.MoveCycle : 1,
+                ApiAbilityId = deserializedObject.id
             };
 
             return tempAbility;
@@ -46,7 +68,9 @@ namespace PokeDexWebApi.Services
             {
                 Id = x.Id,
                 Name = x.Name,
-                Description = x.Description
+                Description = x.Description,
+                MoveCycle = x.MoveCycle,
+                ApiAbilityId = x.ApiAbilityId,
             }).ToList();
 
             return tempList;

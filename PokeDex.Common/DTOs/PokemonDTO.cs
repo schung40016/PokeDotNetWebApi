@@ -13,5 +13,7 @@
         public string? Description { get; set; }
 
         public int AbilityId { get; set; }
+
+        public string? Region { get; set; }
     }
 }

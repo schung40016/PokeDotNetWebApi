@@ -12,6 +12,7 @@ using PokeDex.Common.PokeApiModels;
 using PokeDexWebApi.Services;
 using static System.Net.WebRequestMethods;
 using PokeDexWebApi.Services.ServiceInterface;
+using PokeDex.Data.Repositories;
 
 namespace PokeDexWebApi.Controllers
 {
@@ -20,11 +21,12 @@ namespace PokeDexWebApi.Controllers
     public class AbilityController : ControllerBase
     {
         private readonly PokedexDbContext _context;
-        private AbilityService abilityService = new AbilityService();
+        private AbilityService abilityService; 
 
         public AbilityController(PokedexDbContext context)
         {
             _context = context;
+            abilityService = new AbilityService(context);
         }
 
         // GET: api/Abilities
@@ -40,23 +42,37 @@ namespace PokeDexWebApi.Controllers
         [HttpGet("{id:int}")]
         public async Task<ActionResult<AbilityDTO>> GetAbility(int id)
         {
-            return await abilityService.GetAbility(id);  // rename 
+            return await abilityService.GetAbility(id);
         }
 
         // GET: api/Abilities/70
-        [HttpGet("{name:alpha}")]
+        [HttpGet("{name}")]
         public async Task<ActionResult<AbilityDTO>> GetAbility(string name)
         {
             return await abilityService.GetAbility(name);
         }
 
-/*        [HttpGet()]
+        /*        
+        [HttpGet()]
         public async Task<ActionResult<IEnumerable<Pokemon>>> GetPokemonWithAbility(string name)
         {
             ApiAbility deserializedObject = await serviceAgent.GetAbilityByInput(name);
 
             // We have our move, now lets create each pokemon and return it as a list.
+        }
 
-        }*/
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Ability>> GetAbility(int id)
+        {
+            var ability = await _context.Abilities.FindAsync(id);
+
+            if (ability == null)
+            {
+                return NotFound();
+            }
+
+            return ability;
+        }
+        */
     }
 }

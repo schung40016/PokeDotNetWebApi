@@ -11,13 +11,15 @@ namespace PokeDexWebApi.Services
 {
     public class PokemonMoveService : IPokemonMoveService
     {
-        private PokemonService pokemonService = new PokemonService();
-        private MoveService moveService = new MoveService();
+        private PokemonService pokemonService;
+        private MoveService moveService;
         private PokemonMoveRepository pokemonMoveRepository;
 
         public PokemonMoveService(PokedexDbContext context)
         {
             pokemonMoveRepository = new PokemonMoveRepository(context);
+            pokemonService = new PokemonService(context);
+            moveService = new MoveService(context);
         }
 
         public async Task<PokemonMoveDTO> GetPokemonMove(List<PokemonMove> list, int id)
@@ -29,8 +31,6 @@ namespace PokeDexWebApi.Services
 
         public async Task AddPokemonMove(int pokemonId, int moveId)
         {
-            Console.WriteLine("Debug: " + pokemonId + " " + moveId);
-
             PokemonMove tempPokemonMove = new PokemonMove
             {
                 PokemonId = pokemonId,

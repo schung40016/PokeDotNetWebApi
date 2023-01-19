@@ -13,5 +13,9 @@
         public int? Damage { get; set; }
 
         public int Pp { get; set; }
+
+        public bool? InflictsStatus { get; set; }
+
+        public int? ApiMoveId { get; set; }
     }
 }

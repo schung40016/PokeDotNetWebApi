@@ -17,6 +17,10 @@ public partial class Move
 
     public int Pp { get; set; }
 
+    public bool? InflictsStatus { get; set; }
+
+    public int? ApiMoveId { get; set; }
+
     public virtual ICollection<PokemonMove> PokemonMoves { get; } = new List<PokemonMove>();
 
     public virtual PokemonType Type { get; set; } = null!;

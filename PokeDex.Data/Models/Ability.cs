@@ -11,5 +11,9 @@ public partial class Ability
 
     public string? Description { get; set; }
 
+    public int? MoveCycle { get; set; }
+
+    public int? ApiAbilityId { get; set; }
+
     public virtual ICollection<Pokemon> Pokemons { get; } = new List<Pokemon>();
 }

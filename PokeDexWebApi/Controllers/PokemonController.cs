@@ -10,6 +10,7 @@ using PokeDex.Data.Models;
 using PokeDex.Common.PokeApiModels;
 using PokeDexWebApi.Services;
 using PokeDexWebApi.Services.ServiceInterface;
+using PokeDex.Data.Repositories;
 
 namespace PokeDexWebApi.Controllers
 {
@@ -18,12 +19,12 @@ namespace PokeDexWebApi.Controllers
     public class PokemonController : ControllerBase
     {
         private readonly PokedexDbContext _context;
-        private PokeServiceAgent serviceAgent = new PokeServiceAgent();
-        PokemonService pokemonService = new PokemonService();
+        private PokemonService pokemonService;
 
         public PokemonController(PokedexDbContext context)
         {
-            _context = context;
+            _context = context; 
+            pokemonService = new PokemonService(context);
         }
 
         // GET: api/Pokemons
@@ -36,16 +37,17 @@ namespace PokeDexWebApi.Controllers
         }
 
         // GET: api/Pokemons/5
-        [HttpGet("{id:int}")]
-        public async Task<ActionResult<PokemonDTO>> GetPokemon(int id)
+        [HttpGet("{dexNumber:int}")]
+        public async Task<ActionResult<PokemonDTO>> GetPokemon(int dexNumber)
         {
-            return await pokemonService.GetPokemon(id);
+            return await pokemonService.GetPokemon(dexNumber);
         }
 
         // GET: api/Pokemons/5
         [HttpGet("{name:alpha}")]
         public async Task<ActionResult<PokemonDTO>> GetPokemon(string name)
         {
+            // Currently not working.
             return await pokemonService.GetPokemon(name);
         }
     }

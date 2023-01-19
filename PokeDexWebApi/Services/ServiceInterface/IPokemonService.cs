@@ -10,7 +10,7 @@ namespace PokeDexWebApi.Services.ServiceInterface
 
         public Task<ActionResult<PokemonDTO>> GetPokemon(string name);
 
-        public Task<ActionResult<PokemonDTO>> GetPokemonFromStringOrInt(string input);
+        public Task<ActionResult<PokemonDTO>> GetPokemonFromStringOrInt(string input, Pokemon model);
 
         public Task<List<PokemonDTO>> FetchConvDTO(List<Pokemon> list);
 

@@ -5,39 +5,41 @@ using PokeDex.Data.Models;
 using PokeDex.Common.PokeApiModels;
 using PokeDexWebApi.Services.ServiceInterface;
 using PokeDex.Data.Repositories;
+using PokeDexWebApi.Controllers.Interfaces;
 
 namespace PokeDexWebApi.Services
 {
     public class PokemonService : IPokemonService
     {
-        private PokeServiceAgent serviceAgent = new PokeServiceAgent();
-        private PokemonRepository pokemonRepository;
+        private IPokeServiceAgent _serviceAgent;
+        private IPokemonRepository _pokemonRepository;
 
-        public PokemonService(PokedexDbContext context)
+        public PokemonService(IPokemonRepository pokemonRepository, IPokeServiceAgent serviceAgent)
         {
-            pokemonRepository = new PokemonRepository(context);
+            _pokemonRepository = pokemonRepository;
+            _serviceAgent = serviceAgent;
         }
 
-        public async Task<ActionResult<PokemonDTO>> GetPokemon(int id)
+        public async Task<PokemonDTO> GetPokemon(int id)
         {
-            Pokemon pokemon = await pokemonRepository.FetchPokemonById(id);
+            Pokemon pokemon = await _pokemonRepository.FetchPokemonById(id);
 
             return await this.GetPokemonFromStringOrInt(id.ToString(), pokemon);
         }
 
-        public async Task<ActionResult<PokemonDTO>> GetPokemon(string name)
+        public async Task<PokemonDTO> GetPokemon(string name)
         {
-            var pokemon = await pokemonRepository.FetchPokemonByName(name);
+            var pokemon = await _pokemonRepository.FetchPokemonByName(name);
 
             return await this.GetPokemonFromStringOrInt(name, pokemon);
         }
 
-        public async Task<ActionResult<PokemonDTO>> GetPokemonFromStringOrInt(string input, Pokemon model)
+        public async Task<PokemonDTO> GetPokemonFromStringOrInt(string input, Pokemon model)
         {
-            ApiPokemon apiPokemon = await serviceAgent.GetPokemonByInput(input);
+            ApiPokemon apiPokemon = await _serviceAgent.GetPokemonByInput(input);
 
-            ApiPokemonType apiType = await serviceAgent.GetTypeByUrl(apiPokemon.types[0].type.url);
-            ApiAbility apiAbility = await serviceAgent.GetAbilityByUrl(apiPokemon.abilities[0].ability.url);
+            ApiPokemonType apiType = await _serviceAgent.GetTypeByUrl(apiPokemon.types[0].type.url);
+            ApiAbility apiAbility = await _serviceAgent.GetAbilityByUrl(apiPokemon.abilities[0].ability.url);
 
             bool isNull = model == null ? true : false;
 
@@ -55,8 +57,10 @@ namespace PokeDexWebApi.Services
             return tempPokemon;
         }
 
-        public async Task<List<PokemonDTO>> FetchConvDTO(List<Pokemon> list)
+        public async Task<List<PokemonDTO>> FetchPokemonList()
         {
+            var list = await _pokemonRepository.FetchPokemonList();
+
             List<PokemonDTO> tempList = list.Select(x => new PokemonDTO
             {
                 Id = x.Id,

@@ -1,17 +1,16 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using PokeDexWebApi.Controllers;
 using PokeDex.Common.DTOs;
 using PokeDex.Data.Models;
 using PokeDex.Common.PokeApiModels;
 using PokeDexWebApi.Services.ServiceInterface;
 using PokeDex.Data.Repositories;
+using PokeDexWebApi.Controllers.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace PokeDexWebApi.Services
 {
     // Notes:
     // TO-DO: 
-    // Rename, take out fromdblist.
-    // Clean the "null" green squiggly lines problems.
     // Containerize (future feature).
 
     // Plans:
@@ -20,33 +19,40 @@ namespace PokeDexWebApi.Services
     // AI Randomizer. 
     // Data pipeline.
 
+    /*
+     * Repository is like the ambassador for the program, responsible for interacting with the database.
+     * Services processes all background functions for the controller.
+     * Controller shouly simply call functions from the services.
+     */
+
     public class AbilityService : IAbilityService
     {
-        private PokeServiceAgent serviceAgent = new PokeServiceAgent();
-        private AbilityRepository abilityRepository;
+        private readonly IPokeServiceAgent _serviceAgent;
+        private readonly IAbilityRepository _abilityRepository;
 
-        public AbilityService(PokedexDbContext context)
+        public AbilityService(IPokeServiceAgent agent, IAbilityRepository abilityRepository)
         {
-            abilityRepository = new AbilityRepository(context);
+            _serviceAgent = agent;
+            _abilityRepository = abilityRepository;
         }
 
-        public async Task<ActionResult<AbilityDTO>> GetAbility(int id)
+        public async Task<AbilityDTO> GetAbility(int id)
         {
-            var ability = await abilityRepository.FetchAbilityById(id);
+            var ability = await _abilityRepository.FetchAbilityById(id);
 
             return await this.GetAbilityFromStringOrInt(id.ToString(), ability);
         }
 
-        public async Task<ActionResult<AbilityDTO>> GetAbility(string name)
+        public async Task<AbilityDTO> GetAbility(string name)
         {
-            var ability = await abilityRepository.FetchAbilityByName(name);
+            var ability = await _abilityRepository.FetchAbilityByName(name);
 
             return await this.GetAbilityFromStringOrInt(name, ability);
         }
 
-        public async Task<ActionResult<AbilityDTO>> GetAbilityFromStringOrInt(string input, Ability model)
+        public async Task<AbilityDTO> GetAbilityFromStringOrInt(string input, Ability model)
         {
-            ApiAbility deserializedObject = await serviceAgent.GetAbilityByInput(input);
+            ApiAbility deserializedObject = await _serviceAgent.GetAbilityByInput(input);
 
             bool isNull = model == null ? true : false;
 
@@ -62,8 +68,10 @@ namespace PokeDexWebApi.Services
             return tempAbility;
         }
 
-        public async Task<List<AbilityDTO>> FetchConvDTO(List<Ability> list)
+        public async Task<List<AbilityDTO>> FetchAbilityList()
         {
+            var list = await _abilityRepository.FetchAbilityList();
+
             List<AbilityDTO> tempList = list.Select(x => new AbilityDTO
             {
                 Id = x.Id,

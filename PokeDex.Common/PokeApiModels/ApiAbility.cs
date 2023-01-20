@@ -2,44 +2,44 @@
 {
     public class ApiAbility
     {
-        public int id { get; set; }
+        public int id { get; set; }     
 
-        public string name { get; set; }
+        public string name { get; set; } = null!;
 
-        public List<ApiAbilityEffectEntry> effect_entries { get; set; }
+        public List<ApiAbilityEffectEntry> effect_entries { get; set; } = null!;
 
-        public List<ApiAbilityPokemon> pokemon { get; set; }
+        public List<ApiAbilityPokemon> pokemon { get; set; } = null!;
     }
 
     public class ApiAbilityEffectEntry
     {
-        public string effect { get; set; }
+        public string effect { get; set; } = null!;
 
-        public ApiAbilityEffectEntryLanguage language { get; set; }
+        public ApiAbilityEffectEntryLanguage language { get; set; } = null!;
 
-        public string short_effect { get; set; }
+        public string short_effect { get; set; } = null!;
     }
 
     public class ApiAbilityEffectEntryLanguage
     {
-        public string name { get; set; }
+        public string name { get; set; } = null!;
 
-        public string url { get; set; }
+        public string url { get; set; } = null!;
     }
 
     public class ApiAbilityPokemon
     {
-        public bool is_hidden { get; set; }
+        public bool is_hidden { get; set; } 
 
-        public ApiAbilityPokemonPokemon pokemon { get; set; }
+        public ApiAbilityPokemonPokemon pokemon { get; set; } = null!;
 
         public int slot { get; set; }
     }
 
     public class ApiAbilityPokemonPokemon
     {
-        public string name { get; set; }
+        public string name { get; set; } = null!;
 
-        public string url { get; set; }
+        public string url { get; set; } = null!;
     }
 }

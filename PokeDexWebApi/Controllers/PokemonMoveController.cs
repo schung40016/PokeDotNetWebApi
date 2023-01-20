@@ -9,6 +9,7 @@ using PokeDex.Common.DTOs;
 using PokeDex.Data.Models;
 using PokeDex.Data.Repositories;
 using PokeDexWebApi.Services;
+using PokeDexWebApi.Services.ServiceInterface;
 
 namespace PokeDexWebApi.Controllers
 {
@@ -16,13 +17,11 @@ namespace PokeDexWebApi.Controllers
     [ApiController]
     public class PokemonMoveController : ControllerBase
     {
-        private readonly PokedexDbContext _context;
-        private PokemonMoveService pokemonMoveService;
+        private readonly IPokemonMoveService _pokemonMoveService;
 
-        public PokemonMoveController(PokedexDbContext context)
+        public PokemonMoveController(IPokemonMoveService pokemonMoveService)
         {
-            _context = context;
-            pokemonMoveService = new PokemonMoveService(context);
+            _pokemonMoveService = pokemonMoveService;
         }
 
         // GET: api/PokemonMoves
@@ -30,24 +29,21 @@ namespace PokeDexWebApi.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<PokemonMoveDTO>>> GetPokemonMoves()
         {
-            var list = await _context.PokemonMoves.ToListAsync();
-
-            return await pokemonMoveService.FetchConvDTO(list);
+            return await _pokemonMoveService.FetchPokemonMoveList();
         }
 
         // GET: api/PokemonMoves/5
         [HttpGet("{id}")]
         public async Task<ActionResult<PokemonMoveDTO>> GetPokemonMove(int id)
         {
-            var list = await _context.PokemonMoves.ToListAsync();
-
-            return await pokemonMoveService.GetPokemonMove(list, id);
+            return await _pokemonMoveService.GetPokemonMove(id);
         }
 
         [HttpPost]
         public async Task<ActionResult<PokemonMoveDTO>> PostPokemonMove(int pokemonId, int moveId)
         {
-            await pokemonMoveService.AddPokemonMove(pokemonId, moveId);
+            await _pokemonMoveService.AddPokemonMove(pokemonId, moveId);
+
             return null;
         }
     }

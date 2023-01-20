@@ -12,6 +12,6 @@ namespace PokeDexWebApi.Services.ServiceInterface
 
         public Task<MoveDTO> GetMoveFromStringOrInt(string input, Move model);
 
-        public Task<List<MoveDTO>> FetchConvDTO(List<Move> list);
+        public Task<List<MoveDTO>> FetchMoveList();
     }
 }

@@ -18,29 +18,25 @@ namespace PokeDexWebApi.Controllers
     [ApiController]
     public class PokemonController : ControllerBase
     {
-        private readonly PokedexDbContext _context;
-        private PokemonService pokemonService;
+        private readonly IPokemonService _pokemonService;
 
-        public PokemonController(PokedexDbContext context)
+        public PokemonController(IPokemonService pokemonService)
         {
-            _context = context; 
-            pokemonService = new PokemonService(context);
+            _pokemonService = pokemonService;
         }
 
         // GET: api/Pokemons
         [HttpGet]
         public async Task<ActionResult<IEnumerable<PokemonDTO>>> GetPokemons()
         {
-            var list = await _context.Pokemons.ToListAsync();
-
-            return await pokemonService.FetchConvDTO(list);
+            return await _pokemonService.FetchPokemonList();
         }
 
         // GET: api/Pokemons/5
         [HttpGet("{dexNumber:int}")]
         public async Task<ActionResult<PokemonDTO>> GetPokemon(int dexNumber)
         {
-            return await pokemonService.GetPokemon(dexNumber);
+            return await _pokemonService.GetPokemon(dexNumber);
         }
 
         // GET: api/Pokemons/5
@@ -48,7 +44,7 @@ namespace PokeDexWebApi.Controllers
         public async Task<ActionResult<PokemonDTO>> GetPokemon(string name)
         {
             // Currently not working.
-            return await pokemonService.GetPokemon(name);
+            return await _pokemonService.GetPokemon(name);
         }
     }
 }

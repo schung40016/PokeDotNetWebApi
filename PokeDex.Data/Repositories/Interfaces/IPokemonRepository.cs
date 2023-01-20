@@ -9,6 +9,8 @@ namespace PokeDex.Data.Repositories
 {
     public interface IPokemonRepository
     {
+        public Task<List<Pokemon>> FetchPokemonList();
+
         public Task<Pokemon> FetchPokemonById(int id);
 
         public Task<Pokemon> FetchPokemonByName(string name);

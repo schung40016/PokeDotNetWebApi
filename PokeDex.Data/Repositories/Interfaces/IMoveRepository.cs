@@ -5,10 +5,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PokeDex.Data.Repositories.Interfaces
+namespace PokeDex.Data.Repositories
 {
-    internal interface IMoveRepository
+    public interface IMoveRepository
     {
+        public Task<List<Move>> FetchMoveList();
+
         public Task<Move> FetchMoveById(int id);
 
         public Task<Move> FetchMoveByName(string name);

@@ -19,36 +19,32 @@ namespace PokeDexWebApi.Controllers
     [ApiController]
     public class PokemonTypeController : ControllerBase
     {
-        private readonly PokedexDbContext _context;
-        private PokeServiceAgent serviceAgent = new PokeServiceAgent();
-        private PokemonTypeService pokemonTypeService = new PokemonTypeService();
+        private IPokemonTypeService _pokemonTypeService;
 
-        public PokemonTypeController(PokedexDbContext context)
+        public PokemonTypeController(IPokemonTypeService pokemonTypeService)
         {
-            _context = context;
+            _pokemonTypeService = pokemonTypeService;
         }
 
         // GET: api/PokemonTypes
         [HttpGet]
         public async Task<ActionResult<IEnumerable<PokemonTypeDTO>>> GetPokemonTypes()
         {
-            var list = await _context.PokemonTypes.ToListAsync();
-
-            return await pokemonTypeService.FetchConvDTO(list);
+            return await _pokemonTypeService.FetchPokemonTypeList();
         }
 
         // GET: api/PokemonTypes/5
         [HttpGet("{id:int}")]
         public async Task<ActionResult<PokemonTypeDTO>> GetPokemonType(int id)
         {
-            return await pokemonTypeService.GetPokemonType(id);
+            return await _pokemonTypeService.GetPokemonType(id);
         }
 
         // GET: api/PokemonTypes/normal
         [HttpGet("{name}")]
         public async Task<ActionResult<PokemonTypeDTO>> GetPokemonType(string name)
         {
-            return await pokemonTypeService.GetPokemonType(name);
+            return await _pokemonTypeService.GetPokemonType(name);
         }
     }
 }

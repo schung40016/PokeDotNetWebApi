@@ -20,36 +20,32 @@ namespace PokeDexWebApi.Controllers
     [ApiController]
     public class AbilityController : ControllerBase
     {
-        private readonly PokedexDbContext _context;
-        private AbilityService abilityService; 
+        private readonly IAbilityService _abilityService; 
 
-        public AbilityController(PokedexDbContext context)
+        public AbilityController(IAbilityService abilityService)
         {
-            _context = context;
-            abilityService = new AbilityService(context);
+            _abilityService = abilityService;
         }
 
         // GET: api/Abilities
         [HttpGet]
         public async Task<ActionResult<IEnumerable<AbilityDTO>>> GetAbilities()
         {
-            var list = await _context.Abilities.ToListAsync();
-
-            return await abilityService.FetchConvDTO(list);
+            return await _abilityService.FetchAbilityList();
         }
 
         // GET: api/Abilities/drought
         [HttpGet("{id:int}")]
         public async Task<ActionResult<AbilityDTO>> GetAbility(int id)
         {
-            return await abilityService.GetAbility(id);
+            return await _abilityService.GetAbility(id);
         }
 
         // GET: api/Abilities/70
         [HttpGet("{name}")]
         public async Task<ActionResult<AbilityDTO>> GetAbility(string name)
         {
-            return await abilityService.GetAbility(name);
+            return await _abilityService.GetAbility(name);
         }
 
         /*        

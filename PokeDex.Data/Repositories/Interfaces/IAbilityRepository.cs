@@ -7,8 +7,10 @@ using System.Threading.Tasks;
 
 namespace PokeDex.Data.Repositories
 {
-    internal interface IAbilityRepository
+    public interface IAbilityRepository
     {
+        public Task<List<Ability>> FetchAbilityList();
+
         public Task<Ability> FetchAbilityById(int id);
 
         public Task<Ability> FetchAbilityByName(string name);

@@ -4,26 +4,37 @@ using PokeDex.Common.DTOs;
 using PokeDex.Common.PokeApiModels;
 using PokeDexWebApi.Services.ServiceInterface;
 using PokeDex.Data.Models;
+using PokeDex.Data.Repositories;
+using PokeDexWebApi.Controllers.Interfaces;
+using Microsoft.AspNetCore.Razor.TagHelpers;
+using PokeDex.Data.Repositories.Interfaces;
 
 namespace PokeDexWebApi.Services
 {
     public class PokemonTypeService : IPokemonTypeService
     {
-        private PokeServiceAgent serviceAgent = new PokeServiceAgent();
+        private readonly IPokeServiceAgent _serviceAgent;
+        private readonly IPokemonTypeRepository _pokemonTypeRepository;
 
-        public async Task<ActionResult<PokemonTypeDTO>> GetPokemonType(int id)
+        public PokemonTypeService(IPokeServiceAgent agent, IPokemonTypeRepository pokemonTypeRepository)
+        {
+            _serviceAgent = agent;
+            _pokemonTypeRepository = pokemonTypeRepository;
+        }
+
+        public async Task<PokemonTypeDTO> GetPokemonType(int id)
         {
             return await this.GetPokemonTypeFromStringOrInt(id.ToString());
         }
 
-        public async Task<ActionResult<PokemonTypeDTO>> GetPokemonType(string name)
+        public async Task<PokemonTypeDTO> GetPokemonType(string name)
         {
             return await this.GetPokemonTypeFromStringOrInt(name);
         }
 
-        public async Task<ActionResult<PokemonTypeDTO>> GetPokemonTypeFromStringOrInt(string input)
+        public async Task<PokemonTypeDTO> GetPokemonTypeFromStringOrInt(string input)
         {
-            ApiPokemonType deserializedObject = await serviceAgent.GetPokemonTypeByInput(input);
+            ApiPokemonType deserializedObject = await _serviceAgent.GetPokemonTypeByInput(input);
 
             PokemonTypeDTO tempPokemonType = new PokemonTypeDTO
             {
@@ -37,8 +48,10 @@ namespace PokeDexWebApi.Services
             return tempPokemonType;
         }
 
-        public async Task<List<PokemonTypeDTO>> FetchConvDTO(List<PokemonType> list)
+        public async Task<List<PokemonTypeDTO>> FetchPokemonTypeList()
         {
+            var list = await _pokemonTypeRepository.FetchPokemonTypeList();
+
             List<PokemonTypeDTO> tempList = list.Select(x => new PokemonTypeDTO
             {
                 Id = x.Id,

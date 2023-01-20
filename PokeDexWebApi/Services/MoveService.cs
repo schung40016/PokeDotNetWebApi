@@ -5,37 +5,39 @@ using PokeDex.Data.Models;
 using PokeDex.Common.PokeApiModels;
 using PokeDexWebApi.Services.ServiceInterface;
 using PokeDex.Data.Repositories;
+using PokeDexWebApi.Controllers.Interfaces;
 
 namespace PokeDexWebApi.Services
 {
     public class MoveService : IMoveService
     {
-        private PokeServiceAgent serviceAgent = new PokeServiceAgent();
-        private MoveRepository moveRepository;
+        private readonly IPokeServiceAgent _serviceAgent;
+        private readonly IMoveRepository _moveRepository;
 
-        public MoveService(PokedexDbContext context)
+        public MoveService(IPokeServiceAgent agent, IMoveRepository moveRepository)
         {
-            moveRepository = new MoveRepository(context);
+            _serviceAgent = agent;
+            _moveRepository = moveRepository;
         }
 
         public async Task<MoveDTO> GetMove(int id)
         {
-            var move = await moveRepository.FetchMoveById(id);
+            var move = await _moveRepository.FetchMoveById(id);
 
             return await this.GetMoveFromStringOrInt(id.ToString(), move);
         }
 
         public async Task<MoveDTO> GetMove(string name)
         {
-            var move = await moveRepository.FetchMoveByName(name);
+            var move = await _moveRepository.FetchMoveByName(name);
 
             return await this.GetMoveFromStringOrInt(name, move);
         }
 
         public async Task<MoveDTO> GetMoveFromStringOrInt(string input, Move model)
         {
-            ApiMove apiMove = await serviceAgent.GetMoveByInput(input);
-            ApiPokemonType apiType = await serviceAgent.GetTypeByUrl(apiMove.type.url);
+            ApiMove apiMove = await _serviceAgent.GetMoveByInput(input);
+            ApiPokemonType apiType = await _serviceAgent.GetTypeByUrl(apiMove.type.url);
 
             bool isNull = model == null ? true : false;
 
@@ -54,8 +56,10 @@ namespace PokeDexWebApi.Services
             return tempMove;
         }
 
-        public async Task<List<MoveDTO>> FetchConvDTO(List<Move> list)
+        public async Task<List<MoveDTO>> FetchMoveList()
         {
+            var list = await _moveRepository.FetchMoveList();
+
             List<MoveDTO> tempList = list.Select(x => new MoveDTO
             {
                 Id = x.Id,

@@ -18,18 +18,25 @@ namespace PokeDex.Data.Repositories
             _context = context;
         }
 
+        public async Task<List<Pokemon>> FetchPokemonList()
+        {
+            var list = await _context.Pokemons.ToListAsync();
+
+            return list;
+        }
+
         public async Task<Pokemon> FetchPokemonById(int id)
         {
             var pokemonList = await _context.Pokemons.ToListAsync();
 
-            return pokemonList.FirstOrDefault(x => x.DexNumber == id);
+            return pokemonList.FirstOrDefault(x => x.DexNumber == id)!;
         }
 
         public async Task<Pokemon> FetchPokemonByName(string name)
         {
             var list = await _context.Pokemons.ToListAsync();
 
-            return list.Find(x => x.Name == name);
+            return list.Find(x => x.Name == name)!;
         }
     }
 }

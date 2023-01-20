@@ -11,20 +11,16 @@ namespace PokeDexWebApi.Services
 {
     public class PokemonMoveService : IPokemonMoveService
     {
-        private PokemonService pokemonService;
-        private MoveService moveService;
-        private PokemonMoveRepository pokemonMoveRepository;
+        private readonly IPokemonMoveRepository _pokemonMoveRepository;
 
-        public PokemonMoveService(PokedexDbContext context)
+        public PokemonMoveService(IPokemonMoveRepository pokemonMoveRepository)
         {
-            pokemonMoveRepository = new PokemonMoveRepository(context);
-            pokemonService = new PokemonService(context);
-            moveService = new MoveService(context);
+            _pokemonMoveRepository = pokemonMoveRepository;
         }
 
-        public async Task<PokemonMoveDTO> GetPokemonMove(List<PokemonMove> list, int id)
+        public async Task<PokemonMoveDTO> GetPokemonMove(int id)
         {
-            List<PokemonMoveDTO> pokeMoveDTOList = await FetchConvDTO(list);
+            List<PokemonMoveDTO> pokeMoveDTOList = await FetchPokemonMoveList();
 
             return pokeMoveDTOList.Find(x => x.Id == id);
         }
@@ -36,10 +32,10 @@ namespace PokeDexWebApi.Services
                 PokemonId = pokemonId,
                 MoveId = moveId
             };
-            await pokemonMoveRepository.Add(tempPokemonMove);
+            await _pokemonMoveRepository.Add(tempPokemonMove);
         }
 
-        public async Task<PokemonMove> FetchPokemonMove(Pokemon pokemon, Move move)
+        public Task<PokemonMove> FetchPokemonMove(Pokemon pokemon, Move move)
         {
             PokemonMove tempPokemonMove = new PokemonMove
             {
@@ -50,8 +46,10 @@ namespace PokeDexWebApi.Services
             return tempPokemonMove;
         }
 
-        public async Task<List<PokemonMoveDTO>> FetchConvDTO(List<PokemonMove> list)
+        public async Task<List<PokemonMoveDTO>> FetchPokemonMoveList()
         {
+            var list = await _pokemonMoveRepository.GetPokemonMoves();
+
             List<PokemonMoveDTO> tempList = list.Select(x => new PokemonMoveDTO
             {
                 Id = x.Id,

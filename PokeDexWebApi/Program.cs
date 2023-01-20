@@ -1,6 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using PokeDex.Data.Models;
 using PokeDex.Data.Repositories;
+using PokeDex.Data.Repositories.Interfaces;
+using PokeDexWebApi.Controllers;
+using PokeDexWebApi.Controllers.Interfaces;
 using PokeDexWebApi.Services;
 using PokeDexWebApi.Services.ServiceInterface;
 using System.Text.Json.Serialization;
@@ -20,12 +23,16 @@ builder.Services.AddSwaggerGen();
 // DP Inject.
 builder.Services.AddScoped<IPokemonMoveRepository, PokemonMoveRepository>();
 builder.Services.AddScoped<IPokemonRepository, PokemonRepository>();
+builder.Services.AddScoped<IAbilityRepository, AbilityRepository>();
+builder.Services.AddScoped<IMoveRepository, MoveRepository>();
+builder.Services.AddScoped<IPokemonTypeRepository, PokemonTypeRepository>();
 
 builder.Services.AddScoped<IAbilityService, AbilityService>();
 builder.Services.AddScoped<IMoveService, MoveService>();
 builder.Services.AddScoped<IPokemonMoveService, PokemonMoveService>();
 builder.Services.AddScoped<IPokemonService, PokemonService>();
 builder.Services.AddScoped<IPokemonTypeService, PokemonTypeService>();
+builder.Services.AddScoped<IPokeServiceAgent, PokeServiceAgent>();
 
 var app = builder.Build();
 

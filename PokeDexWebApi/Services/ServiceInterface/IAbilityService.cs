@@ -6,12 +6,12 @@ namespace PokeDexWebApi.Services.ServiceInterface
 {
     public interface IAbilityService
     {
-        public Task<ActionResult<AbilityDTO>> GetAbility(int id);
+        public Task<AbilityDTO> GetAbility(int id);
 
-        public Task<ActionResult<AbilityDTO>> GetAbility(string name);
+        public Task<AbilityDTO> GetAbility(string name);
 
-        public Task<ActionResult<AbilityDTO>> GetAbilityFromStringOrInt(string input, Ability model);
+        public Task<AbilityDTO> GetAbilityFromStringOrInt(string input, Ability model);
 
-        public Task<List<AbilityDTO>> FetchConvDTO(List<Ability> list);
+        public Task<List<AbilityDTO>> FetchAbilityList();
     }
 }

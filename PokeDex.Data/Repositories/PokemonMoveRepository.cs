@@ -17,6 +17,13 @@ namespace PokeDex.Data.Repositories
             _context = context;
         }
 
+        public async Task<List<PokemonMove>> FetchPokemonMoveList()
+        {
+            var list = await _context.PokemonMoves.ToListAsync();
+
+            return list;
+        }
+
         public async Task<IEnumerable<PokemonMove>> GetPokemonMoves()
         {
             return await _context.PokemonMoves.ToListAsync();

@@ -4,10 +4,11 @@ using NuGet.Protocol.Plugins;
 using PokeDex.Data.Models;
 using PokeDex.Common.PokeApiModels;
 using System.Net.Http;
+using PokeDexWebApi.Controllers.Interfaces;
 
 namespace PokeDexWebApi.Controllers
 {
-    public class PokeServiceAgent
+    public class PokeServiceAgent : IPokeServiceAgent
     {
         private static readonly HttpClient httpClient = new HttpClient();
 

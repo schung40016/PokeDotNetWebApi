@@ -9,6 +9,8 @@ namespace PokeDex.Data.Repositories
 {
     public interface IPokemonMoveRepository
     {
+        public Task<List<PokemonMove>> FetchPokemonMoveList();
+
         Task Add(PokemonMove itemToAdd);
 
         Task<IEnumerable<PokemonMove>> GetPokemonMoves();

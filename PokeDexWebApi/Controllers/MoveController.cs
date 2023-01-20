@@ -20,36 +20,32 @@ namespace PokeDexWebApi.Controllers
     [ApiController]
     public class MoveController : ControllerBase
     {
-        private readonly PokedexDbContext _context;
-        MoveService moveService;
+        private readonly IMoveService _moveService;
 
-        public MoveController(PokedexDbContext context)
+        public MoveController(IMoveService moveService)
         {
-            _context = context;
-            moveService = new MoveService(context);
+            _moveService = moveService;
         }
 
         // GET: api/Moves
         [HttpGet]
         public async Task<ActionResult<IEnumerable<MoveDTO>>> GetMoves()   // ALl methods shoulkd return DTO (frontend), service layer also returns DTO
         {
-            var list = await _context.Moves.ToListAsync();
-
-            return await moveService.FetchConvDTO(list);
+            return await _moveService.FetchMoveList();
         }
 
         // GET: api/Moves/5
         [HttpGet("{id:int}")]
         public async Task<ActionResult<MoveDTO>> GetMove(int id)
         {
-            return await moveService.GetMove(id);
+            return await _moveService.GetMove(id);
         }
 
         // GET: api/Moves/pound
         [HttpGet("{name}")]
         public async Task<ActionResult<MoveDTO>> GetMove(string name)
         {
-            return await moveService.GetMove(name);
+            return await _moveService.GetMove(name);
         }
     }
 }
